@@ -70,31 +70,6 @@
                                                 <div class="col-md-5 pull-right">
                                                       <table class="table">
                                                             <tr>
-                                                                  <th><strong><?= trans('subtotal') ?>: </strong></th>
-                                                                  <input type="hidden" name="sub_total"
-                                                                        class="sub_total">
-                                                                  <td class="text-right"><span
-                                                                              class="sub_total">0.00</span></td>
-                                                            </tr>
-                                                            <tr>
-                                                                  <th><strong><?= trans('tax') ?>: </strong></th>
-                                                                  <input type="hidden" name="total_tax"
-                                                                        class="total_tax">
-                                                                  <td class="text-right"><span
-                                                                              class="total_tax">0.00</span></td>
-                                                            </tr>
-                                                            <tr>
-                                                                  <th><strong><?= trans('discount') ?>: </strong></th>
-                                                                  <td class="text-right">
-                                                                        <div class="form-group">
-                                                                              <input type="text" name="discount"
-                                                                                    class="form-control calcEvent pull-right input-sm"
-                                                                                    id="discount" placeholder=""
-                                                                                    required style="width: 40%">
-                                                                        </div>
-                                                                  </td>
-                                                            </tr>
-                                                            <tr>
                                                                   <input type="hidden" name="grand_total"
                                                                         class="grand_total" value="">
                                                                   <th><strong><?= trans('total') ?>: </strong></th>
@@ -188,9 +163,9 @@
                   var html_fields =
                         `<tr class="item">
                           ${td}
-                          <td> <div class="form-group"> <select name="service[]" class="form-control service calcEvent" required>${services_html}</select> </div> </td>
+                          <td> <div class="form-group"> <select name="service[]" class="form-control service" required>${services_html}</select> </div> </td>
                           <td> <div class="form-group"> <input type="text" name="price[]" class="form-control calcEvent price" placeholder="" required> </div> </td>
-                          <td> <input type="hidden" name="total[]" class="form-control calcEvent item_total" placeholder="" required><strong class="item_total">0.00</strong> </td>
+                          <td> <input type="hidden" name="total[]" class="form-control item_total" placeholder="" required><strong class="item_total">0.00</strong> </td>
                         </tr>`;
                   return html_fields;
             }
@@ -216,6 +191,7 @@
                   console.log($($(this)).find(":selected").data('price'));
                   $(this).closest('tr').find('input.price').val($($(this)).find(":selected")
                         .data('price'));
+                  calculate_total()
             });
 
       });
@@ -229,33 +205,21 @@
 
       //---------------------------------------------------------------
       function calculate_total() {
-
+            console.log('calculate_total')
             var sub_total = 0;
             var total = 0;
-            var amountDue = 0;
-            var total_tax = 0;
 
             $('tr.item').each(function() {
 
                   var price = parseFloat($(this).find(".price").val());
                   console.log(price);
-                  var item_total = parseFloat(quantity * price) > 0 ? parseFloat(quantity * price) : 0;
-                  sub_total += parseFloat(price * quantity) > 0 ? parseFloat(price * quantity) : 0;
-                  total_tax += parseFloat(price * quantity * item_tax / 100) > 0 ? parseFloat(price *
-                        quantity * item_tax / 100) : 0;
+                  sub_total += price;
 
-                  $(this).find('.item_total').text(item_total.toFixed(2));
-                  $(this).find('.item_total').val(item_total.toFixed(2));
+                  $(this).find('.item_total').text(price.toFixed(2));
+                  $(this).find('.item_total').val(price.toFixed(2));
             });
 
-            var discount = parseFloat($("[name='discount']").val()) > 0 ? parseFloat($("[name='discount']").val()) : 0;
-            total += parseFloat(sub_total + total_tax - discount);
-
-            $('.sub_total').text(sub_total.toFixed(2));
-            $('.sub_total').val(sub_total.toFixed(2)); // for hidden field
-
-            $('.total_tax').text(total_tax.toFixed(2));
-            $('.total_tax').val(total_tax.toFixed(2)); // for hidden field
+            total += parseFloat(sub_total);
 
             $('#grand_total').text(total.toFixed(2));
             $('.grand_total').val(total.toFixed(2)); // for hidden field

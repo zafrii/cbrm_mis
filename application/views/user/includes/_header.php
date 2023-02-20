@@ -73,27 +73,7 @@
 
                   <!-- Right navbar links -->
                   <ul class="navbar-nav ml-auto">
-                        <!-- Languages -->
-                        <?php  $languages = get_language_list(); ?>
-                        <li class="nav-item dropdown">
-                              <a class="nav-link" data-toggle="dropdown" href="#" title="Languages">
-                                    <i class="fa fa-globe"></i>
-                                    <span class="badge badge-warning navbar-badge">
-                                          <?php 
-            $lang = ($this->session->userdata('site_lang') == '') ? $this->general_settings['default_language'] : $this->session->userdata('site_lang');
-            echo get_lang_short_code($lang); 
-            ?>
 
-                                    </span>
-                              </a>
-                              <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                                    <?php foreach($languages as $lang):  ?>
-                                    <a href="<?= base_url('home/site_lang/'.$lang['id']) ?>" class="dropdown-item">
-                                          <i class="fa fa-flag mr-2"></i> <?= $lang['name'] ?>
-                                    </a>
-                                    <div class="dropdown-divider"></div>
-                                    <?php endforeach; ?>
-                        </li>
                   </ul>
             </nav>
 

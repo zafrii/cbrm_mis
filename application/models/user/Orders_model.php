@@ -10,8 +10,8 @@
 
 		//---------------------------------------------------
 		// Insert New Invoice
-		public function add_invoice($data){
-			return $this->db->insert('ci_payments', $data);
+		public function add_order($data){
+			return $this->db->insert('orders', $data);
 		}
 
 		//---------------------------------------------------
@@ -36,6 +36,14 @@
 	    	);
 	    	$this->db->from('ci_payments');
 	    	$this->db->join('ci_users', 'ci_users.id = ci_payments.user_id ', 'Left');
+	    	$query = $this->db->get();					 
+			return $query->result_array();
+		}
+
+		public function get_all_orders(){
+			$this->db->select('o.id, o.cnic, o.name, o.total_price, o.date_created, o.status, u.firstname, u.lastname');
+	    	$this->db->from('orders o');
+	    	$this->db->join('ci_users u', 'u.id = o.user_id ', 'Left');
 	    	$query = $this->db->get();					 
 			return $query->result_array();
 		}

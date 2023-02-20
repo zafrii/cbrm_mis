@@ -17,9 +17,9 @@
 		// Get All Invoices
 		public function index(){
 
-			$data['invoice_detail'] = $this->orders_model->get_all_invoices();
+			$data['orders_detail'] = $this->orders_model->get_all_orders();
 			$this->load->view('user/includes/_header');
-			$this->load->view('user/invoices/invoice_list', $data);
+			$this->load->view('user/orders/order_list', $data);
 			$this->load->view('user/includes/_footer');
 		}
 
@@ -30,58 +30,44 @@
 			//$this->rbac->check_operation_access(); // check opration permission
 
 			if($this->input->post('submit')){
-				$data['company_data'] = array(
-					'name' => $this->input->post('company_name'),
-					'address1' => $this->input->post('company_address_1'),
-					'address2' => $this->input->post('company_address_2'),
-					'email' => $this->input->post('company_email'),
-					'mobile_no' => $this->input->post('company_mobile_no'),
-					'created_date' => date('Y-m-d h:m:s')
-				);
-				$data = $this->security->xss_clean($data['company_data']);
-				$company_id = $this->orders_model->add_company($data);
-				if($company_id){
-					$items_detail =  array(
-							'product_description' => $this->input->post('product_description'),
-							'quantity' => $this->input->post('quantity'),
-							'price' => $this->input->post('price'),
-							'tax' => $this->input->post('tax'),
-							'total' => $this->input->post('total'),
+				// $data['company_data'] = array(
+				// 	'name' => $this->input->post('company_name'),
+				// 	'address1' => $this->input->post('company_address_1'),
+				// 	'address2' => $this->input->post('company_address_2'),
+				// 	'email' => $this->input->post('company_email'),
+				// 	'mobile_no' => $this->input->post('company_mobile_no'),
+				// 	'created_date' => date('Y-m-d h:m:s')
+				// );
+				// $data = $this->security->xss_clean($data['company_data']);
+				// $company_id = $this->orders_model->add_company($data);
+				// if($company_id){
+					$services_detail =  array(
+							'service' => $this->input->post('service'),
+							'price' => $this->input->post('price')
 						);
-					$items_detail = serialize($items_detail);
+					$services_detail = serialize($services_detail);
 
-					$data['invoice_data'] = array(
+					$order = array(
 
-						'admin_id' => $this->session->userdata('id'),
-						'user_id' => $this->input->post('user_id'),
-						'company_id' => $company_id,
-						'invoice_no' => $this->input->post('invoice_no'),
-						'txn_id' => '',
-						'items_detail' => $items_detail,
-						'sub_total' => $this->input->post('sub_total'),
-						'total_tax' => $this->input->post('total_tax'),
-						'discount' => $this->input->post('discount'),
-						'grand_total' => $this->input->post('grand_total'),
-						'currency ' => 'USD',
-						'payment_method' => '',
-						'payment_status ' => $this->input->post('payment_status'),
-						'client_note ' => $this->input->post('client_note'),
-						'termsncondition ' => $this->input->post('termsncondition'),
-						'due_date' => date('Y-m-d', strtotime($this->input->post('due_date'))),
-						'created_date' => date('Y-m-d', strtotime($this->input->post('billing_date'))),
+						'user_id' => $this->session->userdata('id'),
+						'cnic' => $this->input->post('cnic'),
+						'services' => $services_detail,
+						'name' => $this->input->post('name'),
+						'father_name' => $this->input->post('father_name'),
+						'total_price' => $this->input->post('grand_total')
 					);
 
-					$invoice_data = $this->security->xss_clean($data['invoice_data']);
+					$order = $this->security->xss_clean($order);
 
-					$result = $this->orders_model->add_invoice($invoice_data);
+					$result = $this->orders_model->add_order($order);
 					if($result){
 						// Activity Log 
-						$this->activity_model->add_log(7);
+						// $this->activity_model->add_log(7);
 
-						$this->session->set_flashdata('success', 'Invoice has been Added Successfully!');
-						redirect(base_url('user/invoices'));
+						$this->session->set_flashdata('success', 'Order has been Added Successfully!');
+						redirect(base_url('user/orders'));
 					}
-				}	
+				// }	
 				//print_r($data['invoice_data']);
 			}
 			else{
