@@ -58,9 +58,10 @@
 		}
 
 		public function get_services_list(){
-			$this->db->select('*');
-			$this->db->from('services');
-			$this->db->where('is_active', '1');
+			$user_id = $this->session->userdata('id');
+			$this->db->select('s.title, sr.rate')->from('services s')
+			->join('services_rate sr', "sr.service_id = s.id and sr.user_id = $user_id", 'right')
+			->where('s.is_active', '1');
 			return $this->db->get()->result_array();
 		}
 

@@ -31,12 +31,12 @@ class Services extends MY_Controller {
 				++$i,
 				$row['title'],
 				$row['description'],
-				$row['rate'],
 				'<input class="tgl_checkbox tgl-ios" 
 				data-id="'.$row['id'].'" 
 				id="cb_'.$row['id'].'"
 				type="checkbox"  
 				'.$status.'><label for="cb_'.$row['id'].'"></label>',
+				'<a title="Edit" class="update btn btn-sm btn-warning" href="'.base_url('admin/services/edit/'.$row['id']).'"> <i class="fa fa-pencil-square-o"></i></a>'
 			);
 		}
 		$records['data']=$data;
@@ -90,49 +90,44 @@ class Services extends MY_Controller {
 
 	public function edit($id = 0){
 
-		$this->rbac->check_operation_access(); // check opration permission
+		// $this->rbac->check_operation_access(); // check opration permission
 
 		if($this->input->post('submit')){
-			$this->form_validation->set_rules('username', 'Username', 'trim|required');
-			$this->form_validation->set_rules('firstname', 'Username', 'trim|required');
-			$this->form_validation->set_rules('lastname', 'Lastname', 'trim|required');
-			$this->form_validation->set_rules('email', 'Email', 'trim|valid_email|required');
-			$this->form_validation->set_rules('mobile_no', 'Number', 'trim|required');
-			$this->form_validation->set_rules('status', 'Status', 'trim|required');
+			$this->form_validation->set_rules('user_id', 'Name', 'trim|required');
+			$this->form_validation->set_rules('rate', 'Rate', 'trim|required');
 			if ($this->form_validation->run() == FALSE) {
 					$data = array(
 						'errors' => validation_errors()
 					);
 					$this->session->set_flashdata('errors', $data['errors']);
-					redirect(base_url('admin/users/user_edit/'.$id),'refresh');
+					redirect(base_url('admin/services/edit/'.$id),'refresh');
 			}
 			else{
 				$data = array(
-					'username' => $this->input->post('username'),
-					'firstname' => $this->input->post('firstname'),
-					'lastname' => $this->input->post('lastname'),
-					'email' => $this->input->post('email'),
-					'mobile_no' => $this->input->post('mobile_no'),
-					'password' =>  password_hash($this->input->post('password'), PASSWORD_BCRYPT),
-					'is_active' => $this->input->post('status'),
-					'updated_at' => date('Y-m-d : h:m:s'),
+					'user_id' => $this->input->post('user_id'),
+					'rate' => $this->input->post('rate'),
+					'service_id' => $id,
 				);
 				$data = $this->security->xss_clean($data);
-				$result = $this->services_model->edit_user($data, $id);
+				$result = $this->services_model->add_service_rate($data, $id);
 				if($result){
 					// Activity Log 
-					$this->activity_model->add_log(2);
+					// $this->activity_model->add_log(2);
 
-					$this->session->set_flashdata('success', 'User has been updated successfully!');
-					redirect(base_url('admin/users'));
+					$this->session->set_flashdata('success', 'User Rate has been added successfully!');
+					redirect(base_url('admin/services/edit/'.$id),'refresh');
 				}
 			}
 		}
 		else{
-			$data['user'] = $this->services_model->get_user_by_id($id);
+			$data['service_users'] = $this->services_model->get_service_users($id);
+			
+			$data['remaining_users'] = $this->services_model->get_remaining_users($id);
+			// print_r($data['remaining_users']);die;
+			$data['service_id'] = $id;
 			
 			$this->load->view('admin/includes/_header');
-			$this->load->view('admin/users/user_edit', $data);
+			$this->load->view('admin/services/service_edit', $data);
 			$this->load->view('admin/includes/_footer');
 		}
 	}

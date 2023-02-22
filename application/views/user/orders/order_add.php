@@ -338,7 +338,7 @@ define('UPLOAD_DELETE_URL',base_url('uploads/delete/'));
                         `<tr class="item">
                           ${td}
                           <td> <div class="form-group"> <select name="service[]" class="form-control service" required>${services_html}</select> </div> </td>
-                          <td> <div class="form-group"> <input type="text" name="price[]" class="form-control calcEvent price" placeholder="" required> </div> </td>
+                          <td> <div class="form-group"> <input type="text" name="price[]" class="form-control calcEvent price" placeholder="" required disabled> </div> </td>
                           <td> <input type="hidden" name="total[]" class="form-control item_total" placeholder="" required><strong class="item_total">0.00</strong> </td>
                         </tr>`;
                   return html_fields;

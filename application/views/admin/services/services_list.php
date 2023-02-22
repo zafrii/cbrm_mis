@@ -27,8 +27,8 @@
                                           <th>#<?= trans('id') ?></th>
                                           <th>Title</th>
                                           <th>Description</th>
-                                          <th>Rate</th>
                                           <th><?= trans('status') ?></th>
+                                          <th>Actions</th>
                                     </tr>
                               </thead>
                         </table>
@@ -71,12 +71,6 @@ var table = $('#na_datatable').DataTable({
             },
             {
                   "targets": 3,
-                  "name": "rate",
-                  'searchable': true,
-                  'orderable': true
-            },
-            {
-                  "targets": 4,
                   "name": "is_active",
                   'searchable': false,
                   'orderable': false
