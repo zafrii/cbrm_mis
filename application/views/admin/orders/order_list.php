@@ -37,7 +37,7 @@
                                           <td><?= date_time($data['date_created']); ?></td>
                                           <td>
                                                 <?php $attachments = unserialize($data['attachments']); ?>
-                                                <?php $count = count($attachments); ?>
+                                                <?php $count = $attachments!="" ? count($attachments) : 0; ?>
                                                 <?php for($i=0; $i<$count; $i++): ?>
                                                 <?php if($attachments[$i]!=""): ?>
                                                 <a target="_blank" href="<?=base_url('uploads/'.$attachments[$i])?>">

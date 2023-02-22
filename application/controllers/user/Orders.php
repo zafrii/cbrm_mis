@@ -50,7 +50,7 @@
 							$fileExt = explode('.',$fileName);
 							$fileActualExt = strtolower(end($fileExt));
 
-							$fileNemeNew = strtolower($fileExt[0]).'-'.uniqid('',true).".".$fileActualExt;
+							$fileNemeNew = uniqid('',true).".".$fileActualExt;
 							//File destination
 							$fileDestination = './uploads/'.$fileNemeNew;
 							//function to move temp location to permanent location
