@@ -25,13 +25,23 @@ class Dashboard extends My_Controller {
 
 	public function index(){
 
+		$data['all_users'] = $this->dashboard_model->get_all_users();
+
+		$data['active_users'] = $this->dashboard_model->get_active_users();
+
+		$data['admin_approval_users'] = $this->dashboard_model->get_admin_approval_users();
+		
+		$data['verified_users'] = $this->dashboard_model->get_verified_users();
+		
+		$data['orders'] = $this->dashboard_model->get_orders_count();
+		
 		$data['title'] = 'Dashboard';
 
 		$this->load->view('admin/includes/_header', $data);
 
-    	$this->load->view('admin/dashboard/general');
+		$this->load->view('admin/dashboard/general');
 
-    	$this->load->view('admin/includes/_footer');
+		$this->load->view('admin/includes/_footer');
 
 	}
 
@@ -90,4 +100,4 @@ class Dashboard extends My_Controller {
 
 
 }
-?>	
+?>

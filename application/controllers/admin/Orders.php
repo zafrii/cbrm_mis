@@ -5,12 +5,10 @@
 		public function __construct(){
 
 			parent::__construct();
-			auth_check_user(); // check login auth
+			auth_check(); // check login auth
 			//$this->rbac->check_module_access();
 
-			$this->load->model('user/orders_model', 'orders_model');
-			$this->load->model('user/Activity_model', 'activity_model');
-			$this->load->helper('pdf_helper'); // loaded pdf helper
+			$this->load->model('admin/orders_model', 'orders_model');
 		}
 
 		//---------------------------------------------------
@@ -18,9 +16,9 @@
 		public function index(){
 
 			$data['orders_detail'] = $this->orders_model->get_all_orders();
-			$this->load->view('user/includes/_header');
-			$this->load->view('user/orders/order_list', $data);
-			$this->load->view('user/includes/_footer');
+			$this->load->view('admin/includes/_header');
+			$this->load->view('admin/orders/order_list', $data);
+			$this->load->view('admin/includes/_footer');
 		}
 
 		//---------------------------------------------------
@@ -87,7 +85,7 @@
 						// $this->activity_model->add_log(7);
 
 						$this->session->set_flashdata('success', 'Order has been Added Successfully!');
-						redirect(base_url('user/orders'));
+						redirect(base_url('admin/orders'));
 					}
 				// }	
 				//print_r($data['invoice_data']);
@@ -97,9 +95,9 @@
 				$data['customer_list'] = $this->orders_model->get_customer_list();
 				$data['services_list'] = $this->orders_model->get_services_list();
 
-				$this->load->view('user/includes/_header');
-				$this->load->view('user/orders/order_add', $data);
-				$this->load->view('user/includes/_footer');
+				$this->load->view('admin/includes/_header');
+				$this->load->view('admin/orders/order_add', $data);
+				$this->load->view('admin/includes/_footer');
 			}
 			
 		}
@@ -120,9 +118,9 @@
 
 			$data['invoice_detail'] = $this->orders_model->get_invoice_by_id($id);
 
-			$this->load->view('user/includes/_header');
-        	$this->load->view('user/invoices/invoice_view', $data);
-        	$this->load->view('user/includes/_footer');
+			$this->load->view('admin/includes/_header');
+        	$this->load->view('admin/invoices/invoice_view', $data);
+        	$this->load->view('admin/includes/_footer');
 		}
 
 		//---------------------------------------------------
@@ -180,7 +178,7 @@
 						// Activity Log 
 						$this->activity_model->add_log(8);
 						$this->session->set_flashdata('success', 'Invoice has been updated Successfully!');
-						redirect(base_url('user/invoices/edit/'.$id));
+						redirect(base_url('admin/invoices/edit/'.$id));
 					}
 				}	
 			}
@@ -190,9 +188,9 @@
 
 				$data['title'] = 'Edit Invoice';
 
-				$this->load->view('user/includes/_header');
-				$this->load->view('user/orders/order_edit', $data);
-				$this->load->view('user/includes/_footer');
+				$this->load->view('admin/includes/_header');
+				$this->load->view('admin/orders/order_edit', $data);
+				$this->load->view('admin/includes/_footer');
 			}
 		}
 
@@ -201,7 +199,7 @@
 		public function invoice_pdf_download($id=0){
 
 			$data['invoice_detail'] = $this->orders_model->get_invoice_by_id($id);
-			$this->load->view('user/invoices/invoice_pdf_download', $data);
+			$this->load->view('admin/invoices/invoice_pdf_download', $data);
 		}
 
 		//---------------------------------------------------------------
@@ -209,7 +207,7 @@
 		public function create_pdf($id=0){
 			
 			$data['invoice_detail'] = $this->orders_model->get_invoice_by_id($id);
-			$html = $this->load->view('user/invoices/invoice_pdf', $data, TRUE);
+			$html = $this->load->view('admin/invoices/invoice_pdf', $data, TRUE);
 			
 			$filename = $data['invoice_detail']['invoice_no'];
 		
@@ -260,7 +258,7 @@
 				// Activity Log 
 				$this->activity_model->add_log(9);
 				$this->session->set_flashdata('success', 'Record has been deleted Successfully!');
-				redirect(base_url('user/invoices'));
+				redirect(base_url('admin/invoices'));
 			}
 		}
 

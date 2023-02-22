@@ -41,9 +41,8 @@
 		}
 
 		public function get_all_orders(){
-			$this->db->select('o.id, o.cnic, o.name, o.total_price, o.date_created, o.status, u.firstname, u.lastname');
+			$this->db->select('o.id, o.cnic, o.name, o.total_price, o.date_created, o.status, u.firstname, u.lastname, o.attachments');
 	    	$this->db->from('orders o');
-		    $this->db->where('o.user_id', $this->session->userdata('id'));
 	    	$this->db->join('ci_users u', 'u.id = o.user_id ', 'Left');
 	    	$query = $this->db->get();					 
 			return $query->result_array();

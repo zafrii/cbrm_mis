@@ -80,6 +80,22 @@ $cur_tab = $this->uri->segment(2)==''?'dashboard': $this->uri->segment(2);
                         <?php endif; ?>
 
                         <?php endforeach; ?>
+                        <li id="orders" class="nav-item  has-treeview  has-treeview">
+                              <a href="<?= base_url('admin/orders') ?>" class="nav-link">
+                                    <i class="nav-icon fa fa-file"></i>
+                                    <p>Orders <i class="right fa fa-angle-left"></i></p>
+                              </a>
+                              <ul class="nav nav-treeview">
+
+                                    <li class="nav-item">
+                                          <a href="<?= base_url('admin/orders'); ?>" class="nav-link">
+                                                <i class="fa fa-circle-o nav-icon"></i>
+                                                <p>View Orders</p>
+                                          </a>
+                                    </li>
+
+                              </ul>
+                        </li>
                   </ul>
             </nav>
             <!-- /.sidebar-menu -->

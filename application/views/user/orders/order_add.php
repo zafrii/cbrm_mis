@@ -1,6 +1,18 @@
 <!-- bootstrap datepicker -->
 <link rel="stylesheet" href="<?= base_url() ?>assets/plugins/datepicker/datepicker3.css">
-
+<!-- <link rel="stylesheet" href="<?= base_url() ?>assets/plugins/blueimg/css/jquery.fileupload.css">
+<link rel="stylesheet" href="<?= base_url() ?>assets/plugins/blueimg/css/jquery.fileupload-ui.css">
+<style>
+.fade.in {
+      opacity: 1;
+}
+</style>
+<?php define('UPLOAD_URL',base_url('uploads1'));
+define('UPLOAD_PATH','./uploads1/');
+define('UPLOAD_THUMBNAIL_URL',base_url('thumbnail/'));
+define('UPLOAD_THUMBNAIL_PATH','./uploads1/thumbnail/');
+define('UPLOAD_DELETE_URL',base_url('uploads/delete/'));
+?> -->
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
       <!-- Main content -->
@@ -21,7 +33,72 @@
                         <!-- For Messages -->
                         <?php $this->load->view('user/includes/_messages.php') ?>
 
-                        <?php echo form_open( base_url('user/orders/add')); ?>
+                        <!-- <div class="row">
+                              <div class="col-md-12">
+                                    <div class="card">
+                                          <div class="card-body">
+                                                <div class="row">
+                                                      <div class="col-md-12">
+                                                            <form id="fileupload" action="" method="POST"
+                                                                  enctype="multipart/form-data">
+                                                                  <noscript><input type="hidden" name="redirect"
+                                                                              value="https://blueimp.github.io/jQuery-File-Upload/"></noscript>
+                                                                  <div class="row fileupload-buttonbar">
+                                                                        <div class="col-lg-7">
+                                                                              <span
+                                                                                    class="btn btn-success fileinput-button">
+                                                                                    <i
+                                                                                          class="glyphicon glyphicon-plus"></i>
+                                                                                    <span>Add files...</span>
+                                                                                    <input type="file" name="files[]"
+                                                                                          multiple>
+                                                                              </span>
+                                                                              <button type="submit"
+                                                                                    class="btn btn-primary start">
+                                                                                    <i
+                                                                                          class="glyphicon glyphicon-upload"></i>
+                                                                                    <span>Start upload</span>
+                                                                              </button>
+                                                                              <button type="reset"
+                                                                                    class="btn btn-warning cancel">
+                                                                                    <i
+                                                                                          class="glyphicon glyphicon-ban-circle"></i>
+                                                                                    <span>Cancel upload</span>
+                                                                              </button>
+                                                                              <button type="button"
+                                                                                    class="btn btn-danger delete">
+                                                                                    <i
+                                                                                          class="glyphicon glyphicon-trash"></i>
+                                                                                    <span>Delete</span>
+                                                                              </button>
+                                                                              <input type="checkbox" class="toggle">
+                                                                              <span class="fileupload-process"></span>
+                                                                        </div>
+                                                                        <div class="col-lg-5 fileupload-progress fade">
+                                                                              <div class="progress progress-striped active"
+                                                                                    role="progressbar" aria-valuemin="0"
+                                                                                    aria-valuemax="100">
+                                                                                    <div class="progress-bar progress-bar-success"
+                                                                                          style="width:0%;"></div>
+                                                                              </div>
+                                                                              
+                                                                              <div class="progress-extended">&nbsp;
+                                                                              </div>
+                                                                        </div>
+                                                                  </div>
+                                                                  
+                                                                  <table role="presentation"
+                                                                        class="table table-striped">
+                                                                        <tbody class="files"></tbody>
+                                                                  </table>
+                                                            </form>
+                                                      </div>
+                                                </div>
+                                          </div>
+                                    </div>
+                              </div>
+                        </div> -->
+                        <?php echo form_open_multipart( base_url('user/orders/add')); ?>
                         <div class="row">
                               <div class="col-md-12">
                                     <div class="card">
@@ -41,15 +118,21 @@
                                                                   id="name" placeholder="" required>
                                                       </div>
                                                       <div class="col-md-3">
-                                                            <label for="date" class="control-label">Father Name</label>
+                                                            <label for="father_name" class="control-label">Father
+                                                                  Name</label>
                                                             <input type="text" name="father_name" class="form-control"
                                                                   id="father_name" placeholder="" required>
+                                                      </div>
+                                                      <div class="col-md-3">
+                                                            <label for="attachments"
+                                                                  class="control-label">Attachments</label>
+                                                            <input type="file" name="attachments[]" class="form-control"
+                                                                  id="attachments" multiple>
                                                       </div>
                                                 </div>
                                           </div>
                                     </div>
                               </div>
-
                               <div class="col-md-12">
                                     <div class="card">
                                           <div class="card-body">
@@ -99,14 +182,105 @@
             </div>
       </section>
 
+      <script id="template-upload" type="text/x-tmpl">
+            {% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-upload fade">
+        <td>
+            <span class="preview"></span>
+        </td>
+        <td>
+            <p class="name">{%=file.name%}</p>
+            <strong class="error text-danger"></strong>
+        </td>
+        <td>
+            <p class="size">Processing...</p>
+            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+        </td>
+        <td>
+            {% if (!i && !o.options.autoUpload) { %}
+                <button class="btn btn-primary start" disabled>
+                    <i class="glyphicon glyphicon-upload"></i>
+                    <span>Start</span>
+                </button>
+            {% } %}
+            {% if (!i) { %}
+                <button class="btn btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel</span>
+                </button>
+            {% } %}
+        </td>
+    </tr>
+{% } %}
+</script>
+      <!-- The template to display files available for download -->
+      <script id="template-download" type="text/x-tmpl">
+            {% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download fade">
+        <td>
+            <span class="preview">
+                {% if (file.thumbnailUrl) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+                {% } %}
+            </span>
+        </td>
+        <td>
+            <p class="name">
+                {% if (file.url) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+                {% } else { %}
+                    <span>{%=file.name%}</span>
+                {% } %}
+            </p>
+            {% if (file.error) { %}
+                <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+            {% } %}
+        </td>
+        <td>
+            <span class="size">{%=o.formatFileSize(file.size)%}</span>
+        </td>
+        <td>
+            {% if (file.deleteUrl) { %}
+                <button class="btn btn-danger delete" data-name="{%=file.name%}" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+                    <i class="glyphicon glyphicon-trash"></i>
+                    <span>Delete</span>
+                </button>
+                <input type="checkbox" name="delete" value="1" class="toggle">
+            {% } else { %}
+                <button class="btn btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel</span>
+                </button>
+            {% } %}
+        </td>
+    </tr>
+{% } %}
+</script>
 
 
       <!-- bootstrap datepicker -->
-      <script src="<?= base_url() ?>assets/plugins/datepicker/bootstrap-datepicker.js"></script>
       <script>
-      $('.datepicker').datepicker({
-            autoclose: true
-      });
+      var base_url = "<?=base_url()?>";
+      </script>
+      <!-- <script src="<?= base_url() ?>assets/plugins/datepicker/bootstrap-datepicker.js"></script>
+      <script src="<?= base_url() ?>assets/plugins/blueimg/js/vendor/jquery.ui.widget.js"></script>
+      <script src="//blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
+      <script src="//blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js"></script>
+      <script src="//blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
+      <script src="//blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
+      <script src="<?= base_url() ?>assets/plugins/blueimg/js/jquery.iframe-transport.js"></script>
+      <script src="<?= base_url() ?>assets/plugins/blueimg/js/jquery.fileupload.js"></script>
+      <script src="<?= base_url() ?>assets/plugins/blueimg/js/jquery.fileupload-process.js"></script>
+      <script src="<?= base_url() ?>assets/plugins/blueimg/js/jquery.fileupload-image.js"></script>
+      <script src="<?= base_url() ?>assets/plugins/blueimg/js/jquery.fileupload-audio.js"></script>
+      <script src="<?= base_url() ?>assets/plugins/blueimg/js/jquery.fileupload-video.js"></script>
+      <script src="<?= base_url() ?>assets/plugins/blueimg/js/jquery.fileupload-validate.js"></script>
+      <script src="<?= base_url() ?>assets/plugins/blueimg/js/jquery.fileupload-ui.js"></script>
+      <script src="<?= base_url() ?>assets/plugins/blueimg/js/main.js"></script> -->
+      <script>
+      // $('.datepicker').datepicker({
+      //       autoclose: true
+      // });
       </script>
 
       <script type="text/javascript">
